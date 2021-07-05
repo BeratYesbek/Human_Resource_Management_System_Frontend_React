@@ -19,20 +19,18 @@ export default function Navi() {
 
     return (
         <div>
-            <Segment color="#0000" inverted>
+            <Segment color="black" inverted>
                 <Container>
-                    <Menu color="#0000" inverted secondary>
+                    <Menu color="black" inverted secondary>
                         <Menu.Item
                             name='Job Advertisements'
                             
                         />
                         <Menu.Item
                             name='My Profile'
-                            onClick
                         />
                         <Menu.Item
                             name='My Applications'
-                            onClick
                         />
                         <Menu.Menu position="right">
                         {isAuthenticated?<SignIn signOut={handleSignOut}/>
