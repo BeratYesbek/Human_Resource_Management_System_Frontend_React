@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Icon, Label, Menu, Table } from 'semantic-ui-react'
 import JobAdvertisementService from '../services/JobAdvertisementService'
+import { Link } from "react-router-dom";
 
 export default function JobAdvertisementOperatinos() {
 
@@ -38,8 +39,9 @@ export default function JobAdvertisementOperatinos() {
 
                             ) : <Table.Cell style={{ color: "green" }} >{jobAdvertisement.approve.toString()}</Table.Cell>
                             }                            <Table.Cell>
-                                <Button color="black">See Details</Button>
+                              <Link to={`/JobAdvertisementOperations/${jobAdvertisement.jobAdvertisement_id}`}>  <Button color="black">  See Details</Button> </Link>
                             </Table.Cell>
+
 
                         </Table.Row>
 

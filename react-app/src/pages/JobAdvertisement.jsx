@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import JobAdvertisementService from '../services/JobAdvertisementService'
 import { Card, Button, Icon, Image, Container, GridColumn, Grid } from 'semantic-ui-react'
-
+import ApplicationService from '../services/ApplicationService'
 export default function JobAdvertisement() {
 
     const [jobAdvertisements, setJobAdvertisement] = useState([])
@@ -10,11 +10,28 @@ export default function JobAdvertisement() {
         jobAdvertisementService.getAllDetail().then(result => setJobAdvertisement(result.data.data))
     }, [])
 
+    function applyJob(jobAdvertisement) {
+        let application = {
+            jobAdvertisements: {
+                jobAdvertisementId: jobAdvertisement.jobAdvertisement_id
+            },
+            jobSeeker: {
+                id: 1
+            },
+            applicationDate: Date.now()
+        }
+
+        let applicationService = new ApplicationService()
+        applicationService.add(application)
+
+
+    }
+
     return (
         <div>
             <Container>
                 {jobAdvertisements ? jobAdvertisements.map((jobAdvertisement) => (
-                    <Card style={{marginTop:'20px'}} fluid="100%">
+                    <Card style={{ marginTop: '20px' }} fluid="100%">
                         <Card.Content>
                             <Grid>
                                 <Grid.Row>
@@ -33,7 +50,7 @@ export default function JobAdvertisement() {
                                         <Image
                                             floated='right'
                                             size='small'
-                                            src='https://react.semantic-ui.com/images/avatar/large/steve.jpg'
+                                            src={jobAdvertisement.imageUrl}
                                         />
                                     </GridColumn>
                                 </Grid.Row>
@@ -45,7 +62,7 @@ export default function JobAdvertisement() {
 
                         <Card.Content extra>
                             <div className='ui two buttons'>
-                                <Button basic color='green'>
+                                <Button onClick={() => applyJob(jobAdvertisement)} basic color='green'>
                                     Apply
                                 </Button>
                             </div>

@@ -1,18 +1,41 @@
 import React, { useState, useEffect } from "react";
-import { Card, Icon, Image, Container, GridColumn, Grid } from 'semantic-ui-react'
+import { Card, Icon, Image, Container, GridColumn, Grid ,    Label,
+} from 'semantic-ui-react'
 import '../css/UserProfile.css'
+
+import { Formik, Form, Field } from "formik";
 import { FaLinkedin, FaGithubSquare, FaInstagram, FaFacebookSquare, FaTwitterSquare, FaGooglePlusSquare, FaEdit } from 'react-icons/fa';
 import CvService from '../services/CvService';
 import AbilityService from "../services/AbilityService";
+import TextField from '@material-ui/core/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import BCustomDatePicker from '../utilities/BCustomDatePicker';
+import BCustomTextInput from '../utilities/BCustomTextInput';
 
 
+import Button from '@material-ui/core/Button';
+import AddExperience from "../customComponents/AddExperience";
+import AddEducation from "../customComponents/AddEducation";
+import AddAbility from "../customComponents/AddAbility";
+import AddLanguage from "../customComponents/AddLanguage";
+import AddSocialMedia from "../customComponents/AddSocialMedia";
+import AddCoverLetter from '../customComponents/AddCoverLetter'   
 export default function UserProfile() {
 
-
+    const [openAddExperienceDialog, setAddExperienceDialog] = React.useState(false);
+    const [type, setType] = useState("")
     const [cv, setCv] = useState([]);
     const [abilities, setAbility] = useState([]);
+    const [selectedDate, setSelectedDate] = React.useState(new Date('2014-08-18T21:11:54'));
 
 
+   function openExperienceDialog(){
+        setAddExperienceDialog(true)
+    }
 
     useEffect(() => {
         let cvService = new CvService()
@@ -21,31 +44,6 @@ export default function UserProfile() {
         cvService.getByJobSeekerId(1).then(result => setCv(result.data.data));
 
     }, []);
-
-    function onClickEducation() {
-        return(
-            <div  className="modal">
-
-                <div className="modal-content">
-                    <div className="modal-header">
-                        <span class="close">&times;</span>
-                        <h2>Modal Header</h2>
-                    </div>
-                    <div className="modal-body">
-                        <p>Some text in the Modal Body</p>
-                        <p>Some other text...</p>
-                    </div>
-                    <div className="modal-footer">
-                        <h3>Modal Footer</h3>
-                    </div>
-                </div>
-
-            </div>
-
-);
-
-    }
-
 
 
     return (
@@ -76,8 +74,7 @@ export default function UserProfile() {
 
                                     <Card fluid="100%" width={15} className="cover-letter-box">
                                         <Card.Content header='About You' />
-                                        <a onClick="" ><FaEdit size='30' style={{ float: 'right', margin: '10px' }}></FaEdit></a>
-
+                                        <AddCoverLetter></AddCoverLetter>
                                         <Card.Content description={cv.coverLetter ? cv.coverLetter.cover_letter_text : ""} />
                                         <Card.Content extra>
                                         </Card.Content>
@@ -98,8 +95,7 @@ export default function UserProfile() {
                                                 <h4>Education</h4>
 
                                             </GridColumn>
-                                            <a onClick={onClickEducation} ><FaEdit size='30' style={{ float: 'right', margin: '10px', color: 'white' }}></FaEdit></a>
-
+                                            <AddEducation></AddEducation>
 
                                         </Grid.Row>
                                     </Grid>
@@ -138,8 +134,7 @@ export default function UserProfile() {
                                             <h4>Experiences</h4>
 
                                         </GridColumn>
-                                        <a href="" onClick="" ><FaEdit size='30' style={{ float: 'right', margin: '10px', color: 'white' }}></FaEdit></a>
-
+                                        <AddExperience></AddExperience>
 
                                     </Grid.Row>
                                 </Grid>
@@ -147,16 +142,17 @@ export default function UserProfile() {
 
                             </div>
                             <Grid.Row>
-                                {cv.experiences > 0 ? cv.experiences.map((ability) => (
+                                {cv.experiences ? cv.experiences.map((experience) => (
                                     <GridColumn width={4}>
                                         <Card
                                             className="item-box"
                                             color='yellow'
 
                                             href='#card-example-link-card'
-                                            header='Elliot Baker'
-                                            meta='Friend'
-                                            description='Elliot is a sound engineer living in Nashville who enjoys playing guitar and hanging with his cat.'
+                                            header={experience.workPlaceName}
+                                            meta={experience.workPosition}
+                                            description={"start date: " + experience.startingDate.toString().slice(0,10) +" end date: " + experience.endDate.toString().slice(0,10)}
+                                            
                                         />
                                     </GridColumn>
                                 )) :
@@ -180,8 +176,7 @@ export default function UserProfile() {
                                             <h4>Abilities</h4>
 
                                         </GridColumn>
-                                        <a href="" onClick="" ><FaEdit size='30' style={{ float: 'right', margin: '10px', color: 'white' }}></FaEdit></a>
-
+                                        <AddAbility></AddAbility>
 
                                     </Grid.Row>
                                 </Grid>
@@ -221,8 +216,7 @@ export default function UserProfile() {
                                             <h4>Languages</h4>
 
                                         </GridColumn>
-                                        <a href="" onClick="" ><FaEdit size='30' style={{ float: 'right', margin: '10px', color: 'white' }}></FaEdit></a>
-
+                                        <AddLanguage></AddLanguage>
 
                                     </Grid.Row>
                                 </Grid>
@@ -261,8 +255,7 @@ export default function UserProfile() {
                                             <h4>Social Media</h4>
 
                                         </GridColumn>
-                                        <a href="" onClick="" ><FaEdit size='30' style={{ float: 'right', margin: '10px', color: 'white' }}></FaEdit></a>
-
+                                        <AddSocialMedia></AddSocialMedia>
 
                                     </Grid.Row>
                                 </Grid>
@@ -287,21 +280,15 @@ export default function UserProfile() {
 
                             </Grid.Row>
                         </Grid>
-
-
+        
                     </div>
-
-
 
 
 
                 </div>
 
 
-
             </Container>
-
-
 
         </div>
     )
